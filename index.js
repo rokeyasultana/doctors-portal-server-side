@@ -17,23 +17,41 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 
 async function run (){
-try{
+
+try {
+
   const appointmentCollection = client.db('doctors_portal').collection('appointmentOptions');
 
+const bookingsCollection  = client.db('doctors_portal').collection('bookings');
+
   //get appointment
-  // app.get('/appointment', async (req, res) => {
-  //   const query = {}
-  //   const cursor = appointmentCollection.find(query);
-  //   const appointments = await cursor.toArray();
-  //   res.send(appointments);
-  // });
   
   app.get('/appointment',async(req,res)=>{
     const query = {};
     const cursor = appointmentCollection.find(query);
     const appointments = await cursor.toArray();
     res.send(appointments);
-  })
+  });
+  
+  /****
+   * API Naming Convention
+   * bookings
+   * app.get('/bookings')
+   *  app.get('/bookings/:id')
+   *  app.post('/bookings')
+   *  app.patch('/bookings/:id')
+   *  app.delete('/bookings/:id')
+   */
+
+app.post('/bookings',async(req,res)=> {
+  
+ const booking = req.body;
+ console.log(booking);
+ const result = await bookingsCollection.insertOne(booking);
+ res.send(result);
+
+})
+
 
 }
 
