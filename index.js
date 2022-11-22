@@ -250,6 +250,13 @@ app.get('/doctors',async(req,res)=>{
   res.send(doctors);
 })
 
+//delete doctors
+app.delete('/doctors/:id',verifyJWT,async(req,res) => {
+const id = req.params.id;
+const filter = {_id: ObjectId(id)};
+const result = await doctorsCollection.deleteOne(filter);
+res.send(result);
+})
 
 
 }
