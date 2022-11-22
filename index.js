@@ -45,6 +45,8 @@ const bookingsCollection  = client.db('doctors_portal').collection('bookings');
 
 const usersCollection  = client.db('doctors_portal').collection('users');
 
+const doctorsCollection  = client.db('doctors_portal').collection('doctors');
+
   //get appointment
   
   app.get('/appointmentOptions',async(req,res)=>{
@@ -53,7 +55,7 @@ const usersCollection  = client.db('doctors_portal').collection('users');
     const query = {};
     const options = await appointmentOptionsCollection.find(query).toArray();
 
-    // // get the bookings of the provided date
+    // get the bookings of the provided date
 
     const bookingQuery = {appointment:date}
     const alreadyBooked = await bookingsCollection.find(bookingQuery).toArray();
@@ -129,6 +131,15 @@ res.send(options);
    *  app.patch('/bookings/:id')
    *  app.delete('/bookings/:id')
    */
+
+
+app.get('/appointmentSpecialty',async(req,res)=>{
+  const query = {}
+  const result = await appointmentOptionsCollection.find(query).project({name:1}).toArray();
+  res.send(result);
+
+})
+
 
 app.post('/bookings',async(req,res)=> {
  const booking = req.body;
@@ -223,7 +234,23 @@ return res.send({accessToken: token})
   }
  res.status(403).send({accessToken: ''})
 
+});
+
+//add doctors
+
+app.post('/doctors',async(req,res)=>{
+  const doctor = req.body;
+  const result = await doctorsCollection.insertOne(doctor);
+  res.send(result);
 })
+
+app.get('/doctors',async(req,res)=>{
+  const query = {}
+  const doctors = await doctorsCollection.find(query).toArray();
+  res.send(doctors);
+})
+
+
 
 }
 
